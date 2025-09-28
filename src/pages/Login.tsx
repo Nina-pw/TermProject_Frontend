@@ -68,7 +68,7 @@ export default function Login() {
 
           <p className="auth-note">
             Don’t have an account?{" "}
-            <a onClick={() => navigate("/register")}>Register</a>
+            <a href="/register">Register</a>
           </p>
 
           <div className="auth-meta">
