@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // src/App.tsx
 import {
   BrowserRouter as Router,
@@ -63,28 +62,13 @@ function AppRoutes() {
 
   // ไม่ต้องแสดง Navbar บนหน้า /admin
   const isAdminPath = location.pathname.startsWith("/admin");
-=======
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './Home';
-import Navbar from './Navbar';
-import Login from './Login';
-import Register from './Register';
->>>>>>> 44af1a8bcd74954ab483abbf89e20ac0b4322c13
 
   return (
-<<<<<<< HEAD
     <>
       {!isAdminPath && <Navbar />}
 
       <Routes location={showSheet ? state!.background! : location}>
         {/* public */}
-=======
-    <Router>
-      {/* Navbar แสดงทุกหน้า */}
-      <Navbar />
-
-      <Routes>
->>>>>>> 44af1a8bcd74954ab483abbf89e20ac0b4322c13
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
