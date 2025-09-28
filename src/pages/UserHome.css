@@ -1,0 +1,150 @@
+.uHome .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Toolbar */
+.uHome .toolbar {
+  display: grid;
+  gap: 12px;
+  margin: 14px 0 8px;
+}
+.uHome .searchWrap {
+  position: relative;
+  width: min(420px, 100%);
+}
+.uHome .search {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  border: 1.5px solid #c8aeb0;
+  border-radius: 999px;
+  background: #fff;
+}
+.uHome .searchIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7b1e2b;
+}
+.uHome .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.uHome .chip {
+  padding: 6px 10px;
+  border: 1px solid #e6dad5;
+  border-radius: 10px;
+  background: #fff;
+  font-size: 12px;
+}
+.uHome .chip.is-active {
+  background: #f3ece7;
+  border-color: #d3b8b2;
+  box-shadow: inset 0 0 0 1px #d3b8b2;
+}
+
+/* Section hero */
+.uHome .sec {
+  margin-top: 10px;
+}
+.uHome .hero {
+  border-radius: 10px;
+  background: #f4e7e4 center/cover no-repeat;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  padding: 30px;
+}
+.uHome .hero__title {
+  font-family: "Quattrocento", Georgia, serif;
+  font-size: clamp(30px, 6vw, 72px);
+  color: #fff;
+  letter-spacing: 0.15em;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* Carousel row */
+.uHome .row {
+  position: relative;
+  margin-top: 14px;
+}
+.uHome .row__viewport {
+  overflow: hidden;
+}
+.uHome .row__track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, 1fr);
+  gap: 16px;
+  scroll-snap-type: x mandatory;
+  overflow-x: auto;
+  padding-bottom: 6px;
+}
+.uHome .row__track > * {
+  scroll-snap-align: start;
+}
+
+/* Card */
+.uHome .card {
+  border: 1px solid #eee1da;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+.uHome .card__thumb {
+  aspect-ratio: 4/3;
+  background: #f5f2ef;
+  display: grid;
+  place-items: center;
+}
+.uHome .card__ph {
+  color: #cdbab3;
+}
+.uHome .card__body {
+  padding: 10px 12px;
+}
+.uHome .card__name {
+  font-size: 12px;
+  color: #6b6b6b;
+}
+.uHome .card__price {
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* Dots & next button */
+.uHome .row__dots {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0 2px;
+  justify-content: center;
+}
+.uHome .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #d6b3b3;
+  border: none;
+}
+.uHome .dot.is-active {
+  background: #a45555;
+}
+.uHome .row__next {
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #e1c9c6;
+  background: #fff;
+  cursor: pointer;
+  color: #a04a4a;
+}
+.uHome .row__next:hover {
+  background: #fff6f6;
+}

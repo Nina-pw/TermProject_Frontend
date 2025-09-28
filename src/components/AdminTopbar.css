@@ -1,0 +1,223 @@
+/* ---------- Topbar (เหมือน .nav) ---------- */
+.adminbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--header-cream);
+  border-bottom: none;
+  box-shadow: none;
+  width: var(--safe-vw);
+  margin-left: calc(50% - var(--safe-vw) / 2);
+  margin-right: calc(50% - var(--safe-vw) / 2);
+}
+
+.adminbar__icon {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  padding: 0;
+  line-height: 0;
+}
+.adminbar__icon svg {
+  stroke: var(--brand);
+  transition: transform 0.12s ease;
+}
+.adminbar__icon:hover svg {
+  transform: translateY(-1px);
+}
+
+/* ฟองสนทนา = วงกลมแดงเข้ม ไอคอนสีขาว */
+.adminbar__icon--chat {
+  background: #6f1619;
+}
+.adminbar__icon--chat svg {
+  stroke: #fff;
+}
+
+/* กระดิ่ง = โปร่งใส แต่มี badge + dot */
+.adminbar__icon--bell {
+}
+.adminbar__badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  background: #ff4f79;
+  color: #fff;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+}
+.adminbar__dot {
+  position: absolute;
+  bottom: -3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--brand);
+}
+
+/* ซ้าย (Brand) | ขวา (Search + icons) */
+.adminbar__inner {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(8px, 2vw, 24px);
+  padding-block: 10px;
+}
+.adminbar__inner--bleed {
+  padding-inline: clamp(16px, 4vw, 48px);
+  max-width: none;
+}
+
+/* ---------- LEFT (Brand) ---------- */
+.adminbar__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.adminbar__logo {
+  height: clamp(40px, 5.4vw, 80px);
+  width: auto;
+}
+.adminbar__brandText {
+  /* ให้ mood ใกล้ .nav__brandText */
+  font-family: "Quattrocento", Georgia, serif;
+  font-weight: 700;
+  letter-spacing: 6px;
+  color: var(--brand);
+  font-size: clamp(18px, 2.2vw, 22px);
+  text-transform: none;
+}
+
+/* ---------- RIGHT (Search + icons) ---------- */
+.adminbar__right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(16px, 4vw, 22px); /* เพิ่มช่องไฟระหว่าง search ↔ icons */
+  width: 100%;
+  min-width: 0;
+  flex-wrap: nowrap;
+}
+
+/* ---- Search pill: โฟกัสสวยขึ้น ไม่แดงจัด ---- */
+.adminbar__searchWrap {
+  position: relative;
+  flex: 1 1 min(24vw, 320px);
+  min-width: 120px;
+  max-width: 340px;
+}
+.nav__search {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  padding: 10px 44px 10px 16px;
+  border: 1.5px solid var(--brand);
+  border-radius: 999px;
+  background: #fff;
+}
+.nav__search::placeholder {
+  color: #855;
+  opacity: 0.7;
+}
+.nav__searchIconSvg {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  stroke: var(--brand);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+/* icons สี/เส้นเหมือน .nav */
+.adminbar__icon svg,
+.adminbar__searchIcon {
+  stroke: var(--brand);
+  flex: 0 0 auto;
+}
+.adminbar__icon:hover svg {
+  transform: translateY(-1px);
+}
+
+/* account menu */
+.adminbar__account {
+  position: relative;
+}
+.adminbar__menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #eadfda;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  z-index: 20;
+  padding: 8px;
+}
+.adminbar__menuHeader {
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid #f0e7e2;
+  margin-bottom: 6px;
+}
+.adminbar__menuName {
+  font-weight: 600;
+  color: #6b2a2f;
+}
+.adminbar__menuEmail {
+  font-size: 12px;
+  color: #6e6e6e;
+}
+.adminbar__menuItem {
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #eee4de;
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.adminbar__menuItem:hover {
+  background: #f9f3ee;
+}
+
+/* ---------- Responsive ให้เท่ากับ .nav ---------- */
+@media (max-width: 1100px) {
+  .adminbar__searchWrap {
+    max-width: 280px;
+    min-width: 110px;
+  }
+}
+@media (max-width: 900px) {
+  .adminbar__logo {
+    height: clamp(34px, 7vw, 52px);
+  }
+  .adminbar__searchWrap {
+    flex-basis: 200px;
+    max-width: 240px;
+  }
+}
