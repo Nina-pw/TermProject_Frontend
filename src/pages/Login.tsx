@@ -17,8 +17,7 @@ export default function Login() {
   const [error, setError] = useState("");
 
   if (isReady && currentUser) {
-    const target = currentUser.role === "admin" ? "/admin" : "/shop";
-    const target = currentUser.role === "ADMIN" ? "/admin" : "/userHome";
+    const target = currentUser.role === "ADMIN" ? "/admin" : "/shop";
     return <Navigate to={target} replace />;
   }
 
@@ -27,10 +26,8 @@ export default function Login() {
     setError("");
     try {
       const user = await login(email, password);
-      if (user.role === "admin") navigate("/admin");
-      else navigate("/home"); // 👈 user ไปหน้า Shop
       if (user.role === "ADMIN") navigate("/admin");
-      else navigate("/userHome"); // 👈 user ไปหน้า UserHome
+      else navigate("/home"); // 👈 user ไปหน้า UserHome
     } catch (err: any) {
       setError(err.message || "Login failed");
     }
@@ -81,24 +78,7 @@ export default function Login() {
               Login
             </button>
 
-            <p className="auth-note">
-              Don’t have an account? <a href="/register">Register</a>
-            </p>
-
-            <div className="ft__social">
-              <a href="#" className="google" aria-label="Google">
-                <FcGoogle />
-              </a>
-              <a href="#" className="facebook" aria-label="Facebook">
-                <FaFacebookF />
-              </a>
-              <a href="#" className="apple" aria-label="Apple">
-                <FaApple />
-              </a>
-            </div>
-          </form>
-        </div>
-             <div className="auth-divider">or</div>
+            <div className="auth-divider">or</div>
 
             {/* ปุ่ม Social Login */}
             <button
@@ -106,7 +86,7 @@ export default function Login() {
               className="auth-btn auth-btn--google"
               onClick={handleGoogleLogin}
             >
-              Sign in with Google
+              <FcGoogle /> Sign in with Google
             </button>
 
             <button
@@ -114,20 +94,25 @@ export default function Login() {
               className="auth-btn auth-btn--facebook"
               onClick={handleFacebookLogin}
             >
-              Sign in with Facebook
+              <FaFacebookF /> Sign in with Facebook
             </button>
 
-          <p className="auth-note">
-            Don’t have an account?{" "}
-            <a href="/register">Register</a>
-          </p>
+            {/* Apple จะทำทีหลัง ถ้ายังไม่ใช้คอมเมนต์ไว้ */}
+            {/* <button type="button" className="auth-btn auth-btn--apple">
+              <FaApple /> Sign in with Apple
+            </button> */}
 
-          <div className="auth-meta">
-            <a href="/forgot-password" className="auth-link">
-              Forgot password?
-            </a>
-          </div>
-        </form>
+            <p className="auth-note">
+              Don’t have an account? <a href="/register">Register</a>
+            </p>
+
+            <div className="auth-meta">
+              <a href="/forgot-password" className="auth-link">
+                Forgot password?
+              </a>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

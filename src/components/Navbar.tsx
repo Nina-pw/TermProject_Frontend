@@ -13,16 +13,14 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  // URL สำหรับปุ่ม "Shop" เท่านั้น
+  // URL สำหรับปุ่ม "Shop"
   const shopPath = useMemo(() => {
     if (!currentUser) return "/home";
     return isAdmin ? "/admin" : "/shop";
   }, [currentUser, isAdmin]);
 
-  // โลโก้กลาง/ลิงก์ซ้ายอื่น ๆ ให้ไปหน้า Home เสมอ
   const homePath = "/home";
 
-  // ปิดเมนู account เมื่อคลิกรอบนอก
   useEffect(() => {
     const onDocClick = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -33,10 +31,9 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
 
-  // ตัดชื่อที่จะแสดง (ชื่อจริง ถ้าไม่มีใช้ local-part ของอีเมล)
-  const displayName =
-    currentUser?.name ||
-    (currentUser?.email ? currentUser.email.split("@")[0] : "");
+  // helper: initial letter fallback
+  const getInitial = (name: string, email: string) =>
+    (name || email.charAt(0)).toUpperCase();
 
   return (
     <nav className="navbar">
@@ -57,7 +54,6 @@ export default function Navbar() {
           >
             Categories
           </button>
-
           <div className={`dropdown-content ${categoriesOpen ? "show" : ""}`}>
             <NavLink to="/categories/face">Face</NavLink>
             <NavLink to="/categories/eyes">Eyes</NavLink>
@@ -70,7 +66,7 @@ export default function Navbar() {
         <NavLink to="/aboutus">About Us</NavLink>
       </div>
 
-      {/* CENTER logo → กลับหน้า Home เสมอ */}
+      {/* CENTER logo */}
       <div className="navbar-center">
         <Link to={homePath}>
           <img src="/assets/pic2.png" alt="Logo" className="navbar-logo" />
@@ -101,40 +97,34 @@ export default function Navbar() {
             <FaUser className="navbar-icon" />
           </Link>
         ) : (
-          // ล็อกอินแล้ว (role: user หรือ admin)
           <div className="nav-account" ref={menuRef}>
-            {/* ถ้าเป็น user → โชว์ชื่อแทนไอคอน */}
-            {!isAdmin ? (
-              <button
-                type="button"
-                className="nav__userPill"
-                onClick={() => setMenuOpen((v) => !v)}
-                aria-haspopup="menu"
-                aria-expanded={menuOpen}
-                title={`${currentUser.name} (${currentUser.email})`}
-              >
-                {displayName}
-              </button>
-            ) : (
-              // ถ้าเป็น admin ให้คงไอคอนเดิมไว้
-          {!currentUser ? (
-            // ยังไม่ login → ไปหน้า Login
-            <NavLink to="/login" aria-label="Login">
-              <FaUser className="navbar-icon" />
-            </NavLink>
-          ) : (
-            <div className="nav-account" ref={menuRef}>
-              <button
-                type="button"
-                className="btn-reset navbar-icon"
-                onClick={() => setMenuOpen((v) => !v)}
-                aria-haspopup="menu"
-                aria-expanded={menuOpen}
-                title={`${currentUser.name} (${currentUser.email})`}
-              >
-                <FaUser />
-              </button>
-            )}
+           <button
+              type="button"
+              className="btn-reset navbar-icon"
+              onClick={() => setMenuOpen((v) => !v)}
+              aria-haspopup="menu"
+              aria-expanded={menuOpen}
+              title={`${currentUser.name} (${currentUser.email})`}
+            >
+              {currentUser.avatar ? (
+                <img
+                  src={currentUser.avatar}
+                  alt="Profile"
+                  className="nav-avatar"
+                />
+              ) : (
+                <div className="nav-avatar-fallback">
+                  {currentUser.name
+                    ? currentUser.name
+                        .split(" ")
+                        .map((n) => n[0])
+                        .join("")
+                        .toUpperCase()
+                    : "U"}
+                </div>
+              )}
+            </button>
+
 
             {menuOpen && (
               <div className="nav-menu" role="menu">
@@ -142,6 +132,28 @@ export default function Navbar() {
                   <div className="nav-menu__name">{currentUser.name}</div>
                   <div className="nav-menu__email">{currentUser.email}</div>
                 </div>
+
+                {isAdmin ? (
+                  <button
+                    className="nav-menu__item"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      navigate("/admin");
+                    }}
+                  >
+                    Admin dashboard
+                  </button>
+                ) : (
+                  <button
+                    className="nav-menu__item"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      navigate("/userHome");
+                    }}
+                  >
+                    My page
+                  </button>
+                )}
 
                 <button
                   className="nav-menu__item"
@@ -154,65 +166,10 @@ export default function Navbar() {
                   Logout
                 </button>
               </div>
-            )}
-          </div>
-        )}
-                {currentUser.avatar ? (
-                  <img src={currentUser.avatar} alt="Profile" className="nav-avatar" />
-                ) : (
-                  <FaUser />
-                )}
-              </button>
-
-              {menuOpen && (
-                <div className="nav-menu" role="menu">
-                  <div className="nav-menu__header">
-                    {currentUser.avatar && (
-                      <img src={currentUser.avatar} alt="Profile" className="nav-menu__avatar" />
-                    )}
-                    <div>
-                      <div className="nav-menu__name">{currentUser.name}</div>
-                      <div className="nav-menu__email">{currentUser.email}</div>
-                    </div>
-                  </div>
-
-                  {isAdmin ? (
-                    <button
-                      className="nav-menu__item"
-                      onClick={() => {
-                        setMenuOpen(false);
-                        navigate("/admin");
-                      }}
-                    >
-                      Admin dashboard
-                    </button>
-                  ) : (
-                    <button
-                      className="nav-menu__item"
-                      onClick={() => {
-                        setMenuOpen(false);
-                        navigate("/userHome");
-                      }}
-                    >
-                      My page
-                    </button>
-                  )}
-
-                  <button
-                    className="nav-menu__item"
-                    onClick={() => {
-                      setMenuOpen(false);
-                      navigate("/home", { replace: true, state: {} });
-                      setTimeout(() => logout(), 0);
-                    }}
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
           )}
 
+          </div>
+        )}
       </div>
     </nav>
   );

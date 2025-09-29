@@ -4,11 +4,6 @@ import "./Login.css";
 import { useState } from "react";
 
 function Register() {
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [firstname, setFirstname] = useState('');
   const [lastname, setLastname] = useState('');
   const [email, setEmail] = useState('');
@@ -60,6 +55,15 @@ function Register() {
     }
   };
 
+    // 👉 ฟังก์ชัน Social Login
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+  };
+  const handleFacebookLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/facebook`;
+  };
+
+  
   return (
     <div className="auth-container">
       <div className="auth-box">
@@ -80,7 +84,6 @@ function Register() {
               placeholder="First Name"
               value={firstname}
               onChange={(e) => setFirstname(e.target.value)}
-              onChange={e => setFirstname(e.target.value)}
               required
             />
             <input
@@ -88,7 +91,6 @@ function Register() {
               placeholder="Last Name"
               value={lastname}
               onChange={(e) => setLastname(e.target.value)}
-              onChange={e => setLastname(e.target.value)}
               required
             />
             <input
@@ -96,7 +98,6 @@ function Register() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              onChange={e => setEmail(e.target.value)}
               required
             />
             <input
@@ -104,7 +105,6 @@ function Register() {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onChange={e => setPassword(e.target.value)}
               required
             />
             <input
@@ -114,27 +114,35 @@ function Register() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
-            <button type="submit">Register</button>
-            <p>
-              Already have an account? <a href="/login">Login</a>
-            </p>
-            <div className="ft__social">
-              <a href="#" className="google" aria-label="Google">
-                <FcGoogle />
-              </a>
-              <a href="#" className="facebook" aria-label="Facebook">
-                <FaFacebookF />
-              </a>
-              <a href="#" className="apple" aria-label="Apple">
-                <FaApple />
-              </a>
-            </div>
-              onChange={e => setConfirmPassword(e.target.value)}
-              required
-            />
+
             <button type="submit" disabled={loading}>
               {loading ? 'Registering...' : 'Register'}
             </button>
+
+            <div className="auth-divider">or</div>
+
+            {/* ปุ่ม Social Login */}
+            <button
+              type="button"
+              className="auth-btn auth-btn--google"
+              onClick={handleGoogleLogin}
+            >
+              <FcGoogle /> Sign up with Google
+            </button>
+
+            <button
+              type="button"
+              className="auth-btn auth-btn--facebook"
+              onClick={handleFacebookLogin}
+            >
+              <FaFacebookF /> Sign up with Facebook
+            </button>
+
+            {/* ถ้า Apple ยังไม่ใช้ → คอมเมนต์ไว้ */}
+            {/* <button type="button" className="auth-btn auth-btn--apple">
+              <FaApple /> Sign up with Apple
+            </button> */}
+
             <p>
               Already have an account? <a href="/login">Login</a>
             </p>

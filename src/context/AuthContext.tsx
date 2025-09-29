@@ -5,159 +5,113 @@ import {
   useState,
 } from "react";
 import type { ReactNode } from "react";
+import { jwtDecode } from "jwt-decode";
 
 interface User {
   id: number;
   name: string;
   email: string;
   role: "ADMIN" | "CUSTOMER";
-  avatar?: string;
+  avatar?: string | null;
 }
 
-interface AuthContextProps {
+interface AuthContextType {
   currentUser: User | null;
   isReady: boolean;
-  isAdmin: boolean;
   login: (email: string, password: string) => Promise<User>;
-  register: (name: string, email: string, password: string) => Promise<User>;
-  logout: () => Promise<void>;
+  logout: () => void;
+  isAdmin: boolean; 
 }
 
-const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isReady, setIsReady] = useState(false);
+  // ✅ อ่าน token + avatar หลัง login หรือ oauth redirect
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    const avatarFromQuery = params.get("avatar");
 
-  const isAdmin = currentUser?.role === "ADMIN";
+    if (token) {
+      localStorage.setItem("accessToken", token);
 
-  /* ------------------- login ------------------- */
+      try {
+        const decoded: any = jwtDecode(token);
+        const user: User = {
+          id: decoded.userId,
+          name: decoded.name,
+          email: decoded.email,
+          role: decoded.role,
+          avatar: avatarFromQuery || decoded.avatar || null, // 👈 ใช้ avatar
+        };
+        setCurrentUser(user);
+      } catch (e) {
+        console.error("Failed to decode token", e);
+      }
+
+      // ลบ query ออกจาก URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+      // กรณี refresh → โหลด token จาก localStorage
+      const savedToken = localStorage.getItem("accessToken");
+      if (savedToken) {
+        try {
+          const decoded: any = jwtDecode(savedToken);
+          const user: User = {
+            id: decoded.userId,
+            name: decoded.name,
+            email: decoded.email,
+            role: decoded.role,
+            avatar: decoded.avatar || null,
+          };
+          setCurrentUser(user);
+        } catch (e) {
+          console.error("Invalid saved token", e);
+        }
+      }
+    }
+
+    setIsReady(true);
+  }, []);
+
   const login = async (email: string, password: string) => {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify({ email, password }),
-      credentials: "include", // 👈 รับ cookie refreshToken
     });
 
+    if (!res.ok) throw new Error("Login failed");
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Login failed");
 
-    localStorage.setItem("accessToken", data.accessToken);
-    setCurrentUser(data.user);
+    const token = data.accessToken;
+    localStorage.setItem("accessToken", token);
 
-    return data.user;
-  };
-
-  /* ------------------- register ------------------- */
-  const register = async (name: string, email: string, password: string) => {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-      credentials: "include",
-    });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Registration failed");
-
-    // สมัครเสร็จ user ยังไม่ verify → return object ชั่วคราว
-    return {
-      id: data.user.userID,
-      name: data.user.name,
-      email: data.user.email,
-      role: data.user.role,
+    const decoded: any = jwtDecode(token);
+    const user: User = {
+      id: decoded.userId,
+      name: decoded.name,
+      email: decoded.email,
+      role: decoded.role,
+      avatar: decoded.avatar || null,
     };
+    setCurrentUser(user);
+    return user;
   };
 
-  const fetchMe = async () => {
-  const token = localStorage.getItem("accessToken");
-  if (!token) {
-    setIsReady(true);
-    return;
-  }
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-      credentials: "include",
-    });
-    if (res.ok) {
-      const user = await res.json();
-      setCurrentUser(user);
-    } else {
-      setCurrentUser(null);
-    }
-  } catch {
-    setCurrentUser(null);
-  } finally {
-    setIsReady(true);
-  }
-};
-
-useEffect(() => {
-  fetchMe();
-}, []);
-
-  /* ------------------- logout ------------------- */
-  const logout = async () => {
-    await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
+  const logout = () => {
     localStorage.removeItem("accessToken");
     setCurrentUser(null);
   };
 
-  /* ------------------- refresh ------------------- */
-  const refresh = async () => {
-    try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/refresh`, {
-        method: "POST",
-        credentials: "include",
-      });
-
-      if (!res.ok) {
-        throw new Error("Refresh failed");
-      }
-
-      const data = await res.json();
-      localStorage.setItem("accessToken", data.accessToken);
-
-      // 👉 backend refresh route คืนแค่ accessToken ไม่ได้คืน user
-      // คุณอาจทำ /auth/me ที่คืนข้อมูล user จาก accessToken ได้
-      // แต่ตอนนี้ให้ mock user เดิมไว้ถ้า currentUser ยังมี
-    } catch (err) {
-      console.warn("Refresh token expired");
-      setCurrentUser(null);
-    } finally {
-      setIsReady(true);
-    }
-  };
-
-  /* ------------------- init ------------------- */
-  useEffect(() => {
-    // ตอน mount ลอง refresh session
-    refresh();
-  }, []);
-
   return (
-    <AuthContext.Provider
-      value={{
-        currentUser,
-        isReady,
-        isAdmin,
-        login,
-        register,
-        logout,
-      }}
-    >
+    <AuthContext.Provider value={{ currentUser, isReady, login, logout, isAdmin: currentUser?.role === "ADMIN" }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used inside AuthProvider");
-  return ctx;
-}
+export const useAuth = () => useContext(AuthContext);
