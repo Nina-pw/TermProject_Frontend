@@ -1,21 +1,28 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { MessageCircleMore, Bell, User, SearchIcon } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { FaSearch, FaUser } from "react-icons/fa";
 import { useAuth } from "../context/AuthContext";
 import "./AdminTopbar.css";
 
 export default function AdminTopbar() {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, isAdmin, logout } = useAuth();
+  const location = useLocation();
   const navigate = useNavigate();
 
-  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
 
-  // ปิดเมนูเมื่อคลิกรอบนอก
+  // เส้นทางหลักตาม role (เหมือนของเดิม)
+  const basePath = useMemo(() => {
+    if (!currentUser) return "/home";
+    return isAdmin ? "/admin" : "/userHome";
+  }, [currentUser, isAdmin]);
+
+  // ปิดเมนู account เมื่อคลิกรอบนอก
   useEffect(() => {
     const onDocClick = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setOpen(false);
+        setMenuOpen(false);
       }
     };
     document.addEventListener("mousedown", onDocClick);
@@ -23,83 +30,77 @@ export default function AdminTopbar() {
   }, []);
 
   return (
-    <header className="adminbar">
-      <div className="adminbar__inner adminbar__inner--bleed">
-        {/* LEFT : Brand */}
-        <Link
-          to="/admin"
-          className="adminbar__brand"
-          aria-label="Seller Centre"
-        >
-          <img src="/assets/Logo.png" alt="IRIS" className="adminbar__logo" />
-          <span className="adminbar__brandText">Seller Centre</span>
+    <nav className="AdminTopbar">
+      {/* Left: logo + Seller Centre text */}
+      <div className="AdminTopbar-left">
+        <Link to={basePath} className="brand">
+          <img src="/assets/pic3.png" alt="Logo" className="AdminTopbar-logo" />
+          <span className="brand-text">Seller Centre</span>
         </Link>
+      </div>
 
-        {/* RIGHT : Search + Icons + Account */}
-        <div className="adminbar__right">
-            <div className="adminbar__searchWrap">
-            <input className="adminbar__search" placeholder="Search" />
-            <SearchIcon
-              className="adminbar__searchIcon"
-              size={18}
-              strokeWidth={2}
-            />
-          </div>
+      {/* Right: search + account */}
+      <div className="AdminTopbar-right">
+        <div className="AdminTopbar-search">
+          <input type="text" placeholder="Search..." aria-label="Search" />
+          <FaSearch className="search-icon" />
+        </div>
 
-          {/* ฟองแชทสีแดงเข้ม พร้อม ... ข้างใน */}
-          <button
-            className="adminbar__icon adminbar__icon--chat"
-            title="Messages"
-          >
-            <MessageCircleMore size={18} strokeWidth={2} />
-          </button>
-
-          {/* กระดิ่ง + badge สีชมพู + จุดสถานะด้านล่าง */}
-          <button
-            className="adminbar__icon adminbar__icon--bell"
-            title="Notifications"
-          >
-            <Bell size={18} strokeWidth={2} />
-            <span className="adminbar__badge">6</span>
-            <span className="adminbar__dot" />
-          </button>
-
-          <div className="adminbar__account" ref={menuRef}>
+        {/* Account */}
+        {!currentUser ? (
+          <NavLink to="/login" aria-label="Login">
+            <FaUser className="AdminTopbar-icon" />
+          </NavLink>
+        ) : (
+          <div className="AdminTopbar-account" ref={menuRef}>
             <button
-              className="adminbar__icon"
+              type="button"
+              className="btn-reset navbar-icon"
+              onClick={() => setMenuOpen((v) => !v)}
               aria-haspopup="menu"
-              aria-expanded={open}
-              onClick={() => setOpen((v) => !v)}
-              title={
-                currentUser
-                  ? `${currentUser.name} (${currentUser.email})`
-                  : "Account"
-              }
+              aria-expanded={menuOpen}
+              title={`${currentUser.name} (${currentUser.email})`}
             >
-              <User size={18} strokeWidth={2} />
+              <FaUser />
             </button>
 
-            {open && (
-              <div className="adminbar__menu" role="menu">
-                <div className="adminbar__menuHeader">
-                  <div className="adminbar__menuName">{currentUser?.name}</div>
-                  <div className="adminbar__menuEmail">
-                    {currentUser?.email}
+            {menuOpen && (
+              <div className="AdminTopbar-menu" role="menu">
+                <div className="AdminTopbar-menu__header">
+                  <div className="AdminTopbar-menu__name">
+                    {currentUser.name}
+                  </div>
+                  <div className="AdminTopbar-menu__email">
+                    {currentUser.email}
                   </div>
                 </div>
+
+                {/* {isAdmin ? (
+                  <button
+                    className="AdminTopbar-menu__item"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      navigate("/admin");
+                    }}
+                  >
+                    
+                  </button>
+                ) : (
+                  <button
+                    className="AdminTopbar-menu__item"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      navigate("/userHome");
+                    }}
+                  >
+                    My page
+                  </button>
+                )} */}
+
                 <button
-                  className="adminbar__menuItem"
+                  className="AdminTopbar-menu__item"
                   onClick={() => {
-                    setOpen(false);
-                    navigate("/admin");
-                  }}
-                >
-                  Admin dashboard
-                </button>
-                <button
-                  className="adminbar__menuItem"
-                  onClick={() => {
-                    setOpen(false);
+                    setMenuOpen(false);
                     navigate("/home", { replace: true, state: {} });
                     setTimeout(() => logout(), 0);
                   }}
@@ -109,8 +110,8 @@ export default function AdminTopbar() {
               </div>
             )}
           </div>
-        </div>
+        )}
       </div>
-    </header>
+    </nav>
   );
 }
