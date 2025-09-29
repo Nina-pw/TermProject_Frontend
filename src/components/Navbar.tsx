@@ -117,6 +117,13 @@ export default function Navbar() {
               </button>
             ) : (
               // ถ้าเป็น admin ให้คงไอคอนเดิมไว้
+          {!currentUser ? (
+            // ยังไม่ login → ไปหน้า Login
+            <NavLink to="/login" aria-label="Login">
+              <FaUser className="navbar-icon" />
+            </NavLink>
+          ) : (
+            <div className="nav-account" ref={menuRef}>
               <button
                 type="button"
                 className="btn-reset navbar-icon"
@@ -150,6 +157,62 @@ export default function Navbar() {
             )}
           </div>
         )}
+                {currentUser.avatar ? (
+                  <img src={currentUser.avatar} alt="Profile" className="nav-avatar" />
+                ) : (
+                  <FaUser />
+                )}
+              </button>
+
+              {menuOpen && (
+                <div className="nav-menu" role="menu">
+                  <div className="nav-menu__header">
+                    {currentUser.avatar && (
+                      <img src={currentUser.avatar} alt="Profile" className="nav-menu__avatar" />
+                    )}
+                    <div>
+                      <div className="nav-menu__name">{currentUser.name}</div>
+                      <div className="nav-menu__email">{currentUser.email}</div>
+                    </div>
+                  </div>
+
+                  {isAdmin ? (
+                    <button
+                      className="nav-menu__item"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        navigate("/admin");
+                      }}
+                    >
+                      Admin dashboard
+                    </button>
+                  ) : (
+                    <button
+                      className="nav-menu__item"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        navigate("/userHome");
+                      }}
+                    >
+                      My page
+                    </button>
+                  )}
+
+                  <button
+                    className="nav-menu__item"
+                    onClick={() => {
+                      setMenuOpen(false);
+                      navigate("/home", { replace: true, state: {} });
+                      setTimeout(() => logout(), 0);
+                    }}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
       </div>
     </nav>
   );

@@ -18,6 +18,7 @@ export default function Login() {
 
   if (isReady && currentUser) {
     const target = currentUser.role === "admin" ? "/admin" : "/shop";
+    const target = currentUser.role === "ADMIN" ? "/admin" : "/userHome";
     return <Navigate to={target} replace />;
   }
 
@@ -28,9 +29,19 @@ export default function Login() {
       const user = await login(email, password);
       if (user.role === "admin") navigate("/admin");
       else navigate("/home"); // 👈 user ไปหน้า Shop
+      if (user.role === "ADMIN") navigate("/admin");
+      else navigate("/userHome"); // 👈 user ไปหน้า UserHome
     } catch (err: any) {
       setError(err.message || "Login failed");
     }
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+  };
+
+  const handleFacebookLogin = () => {
+    window.location.href = `${import.meta.env.VITE_API_URL}/auth/facebook`;
   };
 
   return (
@@ -87,6 +98,36 @@ export default function Login() {
             </div>
           </form>
         </div>
+             <div className="auth-divider">or</div>
+
+            {/* ปุ่ม Social Login */}
+            <button
+              type="button"
+              className="auth-btn auth-btn--google"
+              onClick={handleGoogleLogin}
+            >
+              Sign in with Google
+            </button>
+
+            <button
+              type="button"
+              className="auth-btn auth-btn--facebook"
+              onClick={handleFacebookLogin}
+            >
+              Sign in with Facebook
+            </button>
+
+          <p className="auth-note">
+            Don’t have an account?{" "}
+            <a href="/register">Register</a>
+          </p>
+
+          <div className="auth-meta">
+            <a href="/forgot-password" className="auth-link">
+              Forgot password?
+            </a>
+          </div>
+        </form>
       </div>
     </div>
   );

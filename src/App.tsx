@@ -14,6 +14,11 @@ import Register from "./pages/Register";
 import Navbar from "./components/Navbar";
 import Shop from "./pages/Shop";
 import Footer from "./components/Footer";
+import Verify from "./pages/Verify";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 // Admin
 import AdminHome from "./pages/Admin/AdminHome";
@@ -39,7 +44,13 @@ function RequireAuth({
   if (!currentUser) {
     return <Navigate to="/home" replace state={{ from: location }} />;
   }
-  if (role && currentUser.role !== role) {
+  // Map frontend role to backend role for comparison
+  const roleMap: Record<"admin" | "user", "ADMIN" | "CUSTOMER"> = {
+    admin: "ADMIN",
+    user: "CUSTOMER",
+  };
+
+  if (role && currentUser.role !== roleMap[role]) {
     return <Navigate to="/home" replace />;
   }
   return children;
@@ -64,7 +75,11 @@ function AppRoutes() {
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
+        <Route path="/verify" element={<Verify />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
         {/* user */}
         <Route
           path="/shop"
