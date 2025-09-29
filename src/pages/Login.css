@@ -9,14 +9,13 @@ body {
 }
 
 .auth-container {
-  min-height: 100vh;
+  height: calc(100vh - 70px); /* ลบความสูง navbar (70px) */
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-bottom: 80px; /* เผื่อพื้นที่ด้านล่าง */
 
-  /* พื้นหลังแบบไล่สีวงกลม */
+  /* พื้นหลังแบบไล่สี */
   background: radial-gradient(
     circle at center,
     #fffff6 0%,
@@ -26,6 +25,7 @@ body {
 
   font-family: Arial, sans-serif;
 }
+
 
 /* .auth-box {
   display: flex;
@@ -158,4 +158,27 @@ body {
 .auth-form a {
   color: #000000;
   text-decoration: underline;
+}
+
+.ft__social {
+  display: flex;
+  justify-content: center;  /* จัดให้อยู่กึ่งกลางแนวนอน */
+  align-items: center;      /* จัดให้อยู่กึ่งกลางแนวตั้ง (ถ้าสูงขึ้น) */
+  gap: 16px;                /* ระยะห่างระหว่างปุ่ม */
+  margin-top: 20px;         /* เว้นระยะจากปุ่ม Login ด้านบน */
+  font-size: 20px;
+}
+
+.ft__social a.google {
+  color: inherit; /* ให้ใช้สี default จากไอคอน */
+}
+
+/* Facebook เป็นฟ้า */
+.ft__social a.facebook {
+  color: #1877f2;
+}
+
+/* Apple เป็นดำ */
+.ft__social a.apple {
+  color: #000;
 }

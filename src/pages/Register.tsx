@@ -1,18 +1,20 @@
-import './Login.css';
-import { useState } from 'react';
+import { FaFacebookF, FaApple } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
+import "./Login.css";
+import { useState } from "react";
 
 function Register() {
-  const [firstname, setFirstname] = useState('');
-  const [lastname, setLastname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert('Password and Confirm Password do not match!');
+      alert("Password and Confirm Password do not match!");
       return;
     }
 
@@ -35,43 +37,56 @@ Password: ${password}`);
         <div className="auth-right">
           <form className="auth-form" onSubmit={handleRegister}>
             <h2>Register</h2>
-            <input 
-              type="text" 
-              placeholder="First Name" 
-              value={firstname} 
-              onChange={e => setFirstname(e.target.value)} 
+            <input
+              type="text"
+              placeholder="First Name"
+              value={firstname}
+              onChange={(e) => setFirstname(e.target.value)}
               required
             />
-            <input 
-              type="text" 
-              placeholder="Last Name" 
-              value={lastname} 
-              onChange={e => setLastname(e.target.value)} 
+            <input
+              type="text"
+              placeholder="Last Name"
+              value={lastname}
+              onChange={(e) => setLastname(e.target.value)}
               required
             />
-            <input 
-              type="email" 
-              placeholder="Email" 
-              value={email} 
-              onChange={e => setEmail(e.target.value)} 
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               required
             />
-            <input 
-              type="password" 
-              placeholder="Password" 
-              value={password} 
-              onChange={e => setPassword(e.target.value)} 
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <input 
-              type="password" 
-              placeholder="Confirm Password" 
-              value={confirmPassword} 
-              onChange={e => setConfirmPassword(e.target.value)} 
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
             <button type="submit">Register</button>
-            <p>Already have an account? <a href="/login">Login</a></p>
+            <p>
+              Already have an account? <a href="/login">Login</a>
+            </p>
+            <div className="ft__social">
+              <a href="#" className="google" aria-label="Google">
+                <FcGoogle />
+              </a>
+              <a href="#" className="facebook" aria-label="Facebook">
+                <FaFacebookF />
+              </a>
+              <a href="#" className="apple" aria-label="Apple">
+                <FaApple />
+              </a>
+            </div>
           </form>
         </div>
       </div>

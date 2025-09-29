@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react";
-import "./UserHome.css";
+import "./Shop.css";
 
 type SimpleProduct = {
   id: number;
@@ -139,7 +139,7 @@ function ProductCarousel({
   );
 }
 
-export default function UserHome() {
+export default function Shop() {
   const [query, setQuery] = useState("");
   const [chip, setChip] = useState(CHIPS.find((c) => c.checked)?.key ?? "");
 

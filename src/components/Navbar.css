@@ -1,8 +1,13 @@
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   width: 100%;
   overflow-x: hidden; /* ป้องกัน scroll แนวนอน */
+}
+
+.nav-account {
+  position: relative;
 }
 
 .navbar {
@@ -15,15 +20,14 @@ html, body {
   padding: 0 30px;
   /* background: linear-gradient(90deg, #f7c3c3, #fef6f6); */
   background: #fffff6;
-  position: sticky;   /* หรือ fixed */
-  top: 0;             /* ติดขอบบน */
-  left: 0;            /* ป้องกันเลื่อนไปด้านซ้าย */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  position: sticky; /* หรือ fixed */
+  top: 0; /* ติดขอบบน */
+  left: 0; /* ป้องกันเลื่อนไปด้านซ้าย */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   z-index: 100;
   box-sizing: border-box;
-  font-family: 'Montserrat', sans-serif; /* ฟ้อนต์เรียบหรู */;
+  font-family: "Montserrat", sans-serif; /* ฟ้อนต์เรียบหรู */
 }
-
 
 /* Center logo */
 .navbar-center {
@@ -48,7 +52,7 @@ html, body {
   gap: 50px;
   flex-shrink: 1;
   min-width: 0;
-  font-family: 'Montserrat', sans-serif; /* ฟ้อนต์เรียบหรู */
+  font-family: "Montserrat", sans-serif; /* ฟ้อนต์เรียบหรู */
 }
 
 /* Right icons */
@@ -60,7 +64,6 @@ html, body {
   min-width: 0;
 }
 
-
 /* icon */
 .navbar-icon {
   font-size: 17px;
@@ -69,10 +72,10 @@ html, body {
   transition: color 0.3s ease;
 }
 
+
 .navbar-icon:hover {
   color: #feaeb4; /* สีเมื่อ hover */
 }
-
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -98,12 +101,13 @@ html, body {
 .navbar-search input {
   padding: 6px 30px 6px 10px; /* เว้น icon ทางขวา */
   border-radius: 20px;
-  border: 1px solid #840608;       /* เส้นขอบสีอ่อน */
-  background-color: rgba(255,255,255,0.9); /* สีพื้นอ่อน สว่าง */
+  border: 1px solid #840608; /* เส้นขอบสีอ่อน */
+  background-color: rgba(255, 255, 255, 0.9); /* สีพื้นอ่อน สว่าง */
   font-size: 14px;
   outline: none;
   width: 120px;
   transition: width 0.3s ease, border-color 0.3s ease;
+  font-family: "Montserrat", sans-serif;
   color: #840608; /* สีข้อความที่พิมพ์ */
   ::placeholder {
     color: #cecece; /* สี placeholder (ถ้าอยากสวย) */
@@ -119,7 +123,6 @@ html, body {
   border-color: #840608; /* เส้นขอบเน้นเมื่อ focus */
 }
 
-
 .navbar-search .search-icon {
   position: absolute;
   right: 8px;
@@ -127,7 +130,6 @@ html, body {
   color: #840608;
   cursor: pointer;
   pointer-events: none; /* คลิกไม่โดน icon */
-  
 }
 
 /* Responsive */
@@ -149,8 +151,6 @@ html, body {
   color: #feaeb4; /* สีชมพูอ่อนเวลา hover */
 }
 
-
-
 /* container */
 .dropdown {
   position: relative;
@@ -166,17 +166,17 @@ html, body {
   font-size: 15px;
   color: #840608;
   cursor: pointer;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 
 /* กล่อง dropdown (อยู่ใน DOM เสมอ) */
 .dropdown-content {
   position: absolute;
-  top: 100%;            /* เริ่มที่ขอบล่างของปุ่ม */
+  top: 100%; /* เริ่มที่ขอบล่างของปุ่ม */
   left: 0;
   min-width: 150px;
   background-color: #fef6f6;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
   border-radius: 20px;
   padding: 8px 0;
   z-index: 60;
@@ -188,7 +188,8 @@ html, body {
   pointer-events: none;
 
   /* ทำให้ transition สมูท */
-  transition: opacity 250ms cubic-bezier(.2,.9,.2,1), transform 220ms cubic-bezier(.2,.9,.2,1), visibility 0s linear 220ms;
+  transition: opacity 250ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    transform 220ms cubic-bezier(0.2, 0.9, 0.2, 1), visibility 0s linear 220ms;
   will-change: opacity, transform;
 }
 
@@ -198,7 +199,8 @@ html, body {
   transform: translateY(0);
   visibility: visible;
   pointer-events: auto;
-  transition: opacity 220ms cubic-bezier(.2,.9,.2,1), transform 220ms cubic-bezier(.2,.9,.2,1), visibility 0s;
+  transition: opacity 220ms cubic-bezier(0.2, 0.9, 0.2, 1),
+    transform 220ms cubic-bezier(0.2, 0.9, 0.2, 1), visibility 0s;
 }
 
 /* รายการใน dropdown */
@@ -214,6 +216,68 @@ html, body {
   color: #fff;
 }
 
+/* pill ชื่อผู้ใช้ด้านขวา */
+.nav__userPill {
+  border: 1px solid #840608;
+  background: #fff;
+  color: #840608;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: "Montserrat", sans-serif;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.nav__userPill:hover {
+  background: #fff5f5;
+  transform: translateY(-1px);
+}
+
+.nav-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  min-width: 220px;
+  background: #fff;
+  border: 1px solid #eadfda;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  z-index: 200;
+  padding: 8px;
+}
+
+.nav-menu__header {
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid #f0e7e2;
+  margin-bottom: 6px;
+}
+.nav-menu__name {
+  font-weight: 600;
+  color: #6b2a2f;
+}
+.nav-menu__email {
+  font-size: 12px;
+  color: #6e6e6e;
+}
+
+/* ปุ่มรายการในเมนู */
+.nav-menu__item {
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #eee4de;
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.nav-menu__item + .nav-menu__item {
+  margin-top: 6px;
+}
+.nav-menu__item:hover {
+  background: #f9f3ee;
+}
+
 /* ปรับขนาด/ตำแหน่งบนมือถือ ถ้าต้องการ */
 @media (max-width: 768px) {
   .dropdown-content {
@@ -222,5 +286,3 @@ html, body {
     min-width: 160px;
   }
 }
-
-
