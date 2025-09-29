@@ -101,8 +101,8 @@ export default function Footer() {
           © {year} IRIS Beauty all rights reserved
         </div>
         <nav className="ft__legalLinks">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
+          <a href="/privacy">Privacy Policy</a>
+          <a href="/terms">Terms of Service</a>
           <a href="#">UGC Terms of Service</a>
           <a href="#">Your Privacy Choices</a>
           <a href="#">Notice at Collection</a>

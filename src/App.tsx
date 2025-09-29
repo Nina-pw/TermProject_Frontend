@@ -6,18 +6,22 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
-import type { Location } from "react-router-dom";
 import type { JSX } from "react";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Navbar from "./components/Navbar";
-import UserHome from "./pages/UserHome";
+import Shop from "./pages/Shop";
 import Footer from "./components/Footer";
+import Verify from "./pages/Verify";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
 
 // Admin
-import AdminHome from "./pages/Admin/AdminHome"; // layout ของ admin (มี topbar/side bar + <Outlet/>)
+import AdminHome from "./pages/Admin/AdminHome";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import AdminOrders from "./pages/Admin/Orders";
 import AdminProducts from "./pages/Admin/Products";
@@ -35,13 +39,18 @@ function RequireAuth({
   const { currentUser, isReady } = useAuth();
   const location = useLocation();
 
-  if (!isReady) return null; // รออ่าน session ให้เสร็จ
+  if (!isReady) return null;
 
   if (!currentUser) {
-    // ⬇️ ถ้าไม่ได้ล็อกอิน ให้กลับหน้า Home (ไม่ใช่ /login)
     return <Navigate to="/home" replace state={{ from: location }} />;
   }
-  if (role && currentUser.role !== role) {
+  // Map frontend role to backend role for comparison
+  const roleMap: Record<"admin" | "user", "ADMIN" | "CUSTOMER"> = {
+    admin: "ADMIN",
+    user: "CUSTOMER",
+  };
+
+  if (role && currentUser.role !== roleMap[role]) {
     return <Navigate to="/home" replace />;
   }
   return children;
@@ -49,42 +58,39 @@ function RequireAuth({
 
 function AppRoutes() {
   const location = useLocation();
-
-  // เพื่อเปิด login เป็น sheet เมื่อมากดไอคอนใน Navbar เท่านั้น
-  const state = location.state as
-    | { background?: Location; fromNavIcon?: boolean }
-    | undefined;
-  const showSheet = Boolean(
-    state?.fromNavIcon && state?.background && location.pathname === "/login"
-  );
   const { isReady } = useAuth();
   if (!isReady) return null;
 
-  // ไม่ต้องแสดง Navbar บนหน้า /admin
+  // ไม่แสดง Navbar/Footer บนเส้นทาง admin
   const isAdminPath = location.pathname.startsWith("/admin");
 
   return (
     <>
       {!isAdminPath && <Navbar />}
 
-      <Routes location={showSheet ? state!.background! : location}>
+      {/* ใช้ location ปกติ ไม่มี background/Sheet แล้ว */}
+      <Routes>
         {/* public */}
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
+        <Route path="/verify" element={<Verify />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
         {/* user */}
         <Route
-          path="/userHome"
+          path="/shop"
           element={
             <RequireAuth role="user">
-              <UserHome />
+              <Shop />
             </RequireAuth>
           }
         />
 
-        {/* admin: ใช้ layout + nested routes */}
+        {/* admin + nested */}
         <Route
           path="/admin"
           element={
@@ -96,13 +102,9 @@ function AppRoutes() {
           <Route index element={<AdminDashboard />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="products" element={<AdminProducts />} />
-
-          <Route index element={<AdminDashboard />} />
-          <Route path="orders" element={<AdminOrders />} />
-          <Route path="products" element={<AdminProducts />} />
-          {/* เพิ่มเส้นทางอื่น ๆ ได้ที่นี่ เช่น customers, categories */}
         </Route>
       </Routes>
+
       {!isAdminPath && <Footer />}
     </>
   );

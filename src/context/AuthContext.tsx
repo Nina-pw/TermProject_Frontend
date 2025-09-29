@@ -1,90 +1,117 @@
-// src/context/AuthContext.tsx
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { type User } from "../types";
-import { MOCK_USERS } from "../mocks/users";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import type { ReactNode } from "react";
+import { jwtDecode } from "jwt-decode";
 
-type AuthUser = Omit<User, "password">;
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: "ADMIN" | "CUSTOMER";
+  avatar?: string | null;
+}
 
-type AuthContextType = {
-  currentUser: AuthUser | null;
-  isAdmin: boolean;
+interface AuthContextType {
+  currentUser: User | null;
   isReady: boolean;
-  login: (email: string, password: string) => Promise<AuthUser>;
+  login: (email: string, password: string) => Promise<User>;
   logout: () => void;
-};
+  isAdmin: boolean; 
+}
 
-const KEY = "auth_user";
-// ✅ keys ที่ใช้โดย RequireAuth/หน้า Login สำหรับจำหน้าปลายทาง
-const RETURN_KEY = "return_to_path";
-const NEED_ROLE_KEY = "return_needs_role";
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isReady, setIsReady] = useState(false);
-
-  // rehydrate จาก localStorage ครั้งแรก
+  // ✅ อ่าน token + avatar หลัง login หรือ oauth redirect
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as AuthUser;
-        setCurrentUser(parsed);
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    const avatarFromQuery = params.get("avatar");
+
+    if (token) {
+      localStorage.setItem("accessToken", token);
+
+      try {
+        const decoded: any = jwtDecode(token);
+        const user: User = {
+          id: decoded.userId,
+          name: decoded.name,
+          email: decoded.email,
+          role: decoded.role,
+          avatar: avatarFromQuery || decoded.avatar || null, // 👈 ใช้ avatar
+        };
+        setCurrentUser(user);
+      } catch (e) {
+        console.error("Failed to decode token", e);
       }
-    } catch {
-      // ignore parse error
-      localStorage.removeItem(KEY);
-    } finally {
-      setIsReady(true);
+
+      // ลบ query ออกจาก URL
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else {
+      // กรณี refresh → โหลด token จาก localStorage
+      const savedToken = localStorage.getItem("accessToken");
+      if (savedToken) {
+        try {
+          const decoded: any = jwtDecode(savedToken);
+          const user: User = {
+            id: decoded.userId,
+            name: decoded.name,
+            email: decoded.email,
+            role: decoded.role,
+            avatar: decoded.avatar || null,
+          };
+          setCurrentUser(user);
+        } catch (e) {
+          console.error("Invalid saved token", e);
+        }
+      }
     }
+
+    setIsReady(true);
   }, []);
 
-  // sync ข้ามแท็บ
-  useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (e.key !== KEY) return;
-      setCurrentUser(e.newValue ? (JSON.parse(e.newValue) as AuthUser) : null);
+  const login = async (email: string, password: string) => {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!res.ok) throw new Error("Login failed");
+    const data = await res.json();
+
+    const token = data.accessToken;
+    localStorage.setItem("accessToken", token);
+
+    const decoded: any = jwtDecode(token);
+    const user: User = {
+      id: decoded.userId,
+      name: decoded.name,
+      email: decoded.email,
+      role: decoded.role,
+      avatar: decoded.avatar || null,
     };
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
+    setCurrentUser(user);
+    return user;
+  };
 
-  const login = useCallback(async (email: string, password: string) => {
-    const normalized = email.trim().toLowerCase();
-    const found = MOCK_USERS.find(
-      (u) => u.email.toLowerCase() === normalized && u.password === password
-    );
-    if (!found) throw new Error("Invalid email or password");
-
-    const { password: _omit, ...safe } = found; // อย่าเก็บ password
-    setCurrentUser(safe);
-    localStorage.setItem(KEY, JSON.stringify(safe));
-    return safe;
-  }, []);
-
-  const logout = useCallback(() => {
-    // ✅ ลบ session + ล้าง return keys กันเด้งกลับ /login
+  const logout = () => {
+    localStorage.removeItem("accessToken");
     setCurrentUser(null);
-    localStorage.removeItem(KEY);
-    sessionStorage.removeItem(RETURN_KEY);
-    sessionStorage.removeItem(NEED_ROLE_KEY);
-  }, []);
+  };
 
-  const isAdmin = useMemo(() => currentUser?.role === "admin", [currentUser]);
-
-  const value = useMemo<AuthContextType>(
-    () => ({ currentUser, isAdmin, isReady, login, logout }),
-    [currentUser, isAdmin, isReady, login, logout]
+  return (
+    <AuthContext.Provider value={{ currentUser, isReady, login, logout, isAdmin: currentUser?.role === "ADMIN" }}>
+      {children}
+    </AuthContext.Provider>
   );
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
-
-
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used inside <AuthProvider>");
-  return ctx;
-}
+export const useAuth = () => useContext(AuthContext);
