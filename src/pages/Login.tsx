@@ -3,10 +3,7 @@ import { useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Login.css";
-import {
-  FaFacebookF,
-  FaApple,
-} from "react-icons/fa";
+import { FaFacebookF, FaApple } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 
 export default function Login() {
@@ -81,21 +78,24 @@ export default function Login() {
             <div className="auth-divider">or</div>
 
             {/* ปุ่ม Social Login */}
-            <button
-              type="button"
-              className="auth-btn auth-btn--google"
-              onClick={handleGoogleLogin}
-            >
-              <FcGoogle /> Sign in with Google
-            </button>
+            <div className="ft__social">
+              <a
+                href={`${import.meta.env.VITE_API_URL}/auth/google`}
+                className="google"
+                aria-label="Sign in with Google"
+              >
+                <FcGoogle />
+              </a>
 
-            <button
-              type="button"
-              className="auth-btn auth-btn--facebook"
-              onClick={handleFacebookLogin}
-            >
-              <FaFacebookF /> Sign in with Facebook
-            </button>
+              <a
+                href={`${import.meta.env.VITE_API_URL}/auth/facebook`}
+                className="facebook"
+                aria-label="Sign in with Facebook"
+              >
+                <FaFacebookF />
+              </a>
+
+            </div>
 
             {/* Apple จะทำทีหลัง ถ้ายังไม่ใช้คอมเมนต์ไว้ */}
             {/* <button type="button" className="auth-btn auth-btn--apple">
