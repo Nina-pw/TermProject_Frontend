@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       headers: {
         "Content-Type": "application/json",
         ...(init.headers || {}),
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(token ? { Authorization: ` ${token}` } : {}),
       },
     });
     if (res.status !== 401) {
@@ -82,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       headers: {
         "Content-Type": "application/json",
         ...(init.headers || {}),
-        Authorization: `Bearer ${newToken}`,
+        Authorization: ` ${newToken}`,
       },
     });
     if (!res2.ok) throw new Error(await res2.text());
