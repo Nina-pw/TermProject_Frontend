@@ -60,6 +60,7 @@ export default function Navbar() {
             <NavLink to="/categories/lips">Lips</NavLink>
             <NavLink to="/categories/cheeks">Cheeks</NavLink>
             <NavLink to="/categories/body">Body</NavLink>
+            <NavLink to="/categories/body">Tools</NavLink>
           </div>
         </div>
 

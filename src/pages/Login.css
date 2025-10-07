@@ -25,6 +25,23 @@ body {
 
   font-family: Arial, sans-serif;
 }
+.auth-container1 {
+  height: calc(110vh - 70px); /* ลบความสูง navbar (70px) */
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* พื้นหลังแบบไล่สี */
+  background: radial-gradient(
+    circle at center,
+    #fffff6 0%,
+    #fffff6 40%,
+    #f7c3c3 100%
+  );
+
+  font-family: Arial, sans-serif;
+}
 
 
 /* .auth-box {

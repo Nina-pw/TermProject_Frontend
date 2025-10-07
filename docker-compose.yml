@@ -1,0 +1,27 @@
+name: iris-frontend
+services:
+  pf-frontend:
+    image: node:20-alpine
+    container_name: pf-frontend
+    working_dir: /app
+    environment:
+      # ไม่ต้องมี VITE_API_URL เพราะใช้ Vite proxy
+      # ใส่ตัวแปรนี้เผื่อคุณอยากอ่านใน vite.config.ts แทนการ hardcode
+      VITE_PROXY_TARGET: http://pf-backend:3000
+    volumes:
+      - .:/app
+      - frontend_node_modules:/app/node_modules
+    command: sh -lc "corepack enable && pnpm install && pnpm dev -- --host --port 5173"
+    ports:
+      - "5173:5173"
+    networks:
+      - fs-net
+    depends_on:
+      - pf-backend   # ถ้า FE/BE รันต่าง compose จริง ๆ บางระบบจะไม่รอให้แบบนี้ ทำงานได้แม้ไม่มี
+
+volumes:
+  frontend_node_modules:
+
+networks:
+  fs-net:
+    external: true
