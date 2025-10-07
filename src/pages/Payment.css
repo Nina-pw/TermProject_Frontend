@@ -1,0 +1,196 @@
+.page-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 40px;
+  background-color: #fdf7f6;
+  min-height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* ---------- ซ้าย ---------- */
+.payment-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 400px;
+}
+
+.qr-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.qr-wrapper h2 {
+  color: #661c1c;
+  margin-bottom: 15px;
+}
+
+.amount {
+  margin-top: 15px;
+  color: #333;
+  font-weight: bold;
+}
+
+.expire {
+  font-size: 12px;
+  color: #777;
+  margin-top: 5px;
+}
+
+/* ---------- ฟอร์ม ---------- */
+.shipping-form {
+  width: 100%;
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.shipping-form h3 {
+  text-align: center;
+  color: #661c1c;
+  margin-bottom: 10px;
+}
+
+.shipping-form label {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.shipping-form input,
+.shipping-form textarea {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.shipping-form .btn-submit {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: #661c1c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.shipping-form .btn-submit:hover {
+  background-color: #913232;
+}
+
+/* ---------- ขวา: รายการสินค้า ---------- */
+.cart-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 25px 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 400px;
+}
+
+.cart-section h2 {
+  text-align: center;
+  color: #661c1c;
+  margin-bottom: 20px;
+}
+
+.cart-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.item-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qty-badge {
+  background: #661c1c;
+  color: white;
+  border-radius: 50%;
+  font-size: 12px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-left img {
+  width: 50px;
+  height: 50px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.item-name {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.shade {
+  font-size: 13px;
+  color: #666;
+}
+
+.price {
+  font-weight: 500;
+  font-size: 14px;
+  color: #000;
+}
+
+/* ---------- สรุปยอดรวม ---------- */
+.summary {
+  margin-top: 15px;
+  font-size: 15px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  border-top: 2px solid #ddd;
+  padding-top: 10px;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.product-img {
+  width: 55px;
+  height: 55px;
+  border-radius: 6px;
+  object-fit: cover;
+  background-color: #f8f8f8;
+}

@@ -19,6 +19,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
+import PaymentPage from "./pages/Payment";
 
 // Admin
 import AdminHome from "./pages/Admin/AdminHome";
@@ -78,6 +79,7 @@ function AppRoutes() {
         <Route path="/verify" element={<Verify />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/payment" element={<PaymentPage />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
         {/* user */}
