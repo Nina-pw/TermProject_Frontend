@@ -166,27 +166,34 @@ export default function Home() {
 
   // Mock data from public/mock-bestsellers.json
   useEffect(() => {
-  fetch("/api/bestsellers")
-    .then((res) => {
+  (async () => {
+    try {
+      const res = await fetch("/api/bestsellers");
       if (!res.ok) throw new Error("no api");
-      return res.json();
-    })
-    .then((data) => setBestsellers(data))
-    .catch(() => {
-      // ถ้าไม่มี backend ให้โหลด mock file จาก public/
-      fetch("/mock-bestsellers.json")
-        .then((r) => {
-          if (!r.ok) throw new Error("no mock");
-          return r.json();
-        })
-        .then((d) => setBestsellers(d))
-        .catch((err) => {
-          console.error("Failed to load mock-bestsellers.json", err);
-          // เอา inline fallback ออก — ถ้าต้องการให้ว่างไว้ ให้เป็น [] หรือ set error state เพื่อแสดง UI ว่าไม่มีข้อมูล
-          setBestsellers([]);
-        });
-    });
+      const json = await res.json();
+
+      // รองรับหลายรูปแบบ payload
+      const arr =
+        Array.isArray(json) ? json
+        : Array.isArray(json.items) ? json.items
+        : Array.isArray(json.data) ? json.data
+        : [];
+
+      setBestsellers(arr as Product[]);
+    } catch {
+      // fallback ไป mock
+      try {
+        const r = await fetch("/mock-bestsellers.json");
+        if (!r.ok) throw new Error("no mock");
+        const d = await r.json();
+        setBestsellers(Array.isArray(d) ? d : []);
+      } catch {
+        setBestsellers([]); // ให้เป็น array ว่าง ป้องกัน map พัง
+      }
+    }
+  })();
 }, []);
+
 
 //Backend API
 // useEffect(() => {

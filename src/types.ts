@@ -1,3 +1,5 @@
+import type { Key, ReactNode } from "react";
+
 // User
 export type UserRole = "admin" | "user";
 

@@ -20,6 +20,8 @@ import ResetPassword from "./pages/ResetPassword";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 
+
+
 // Admin
 import AdminHome from "./pages/Admin/AdminHome";
 import AdminDashboard from "./pages/Admin/Dashboard";
@@ -27,6 +29,7 @@ import AdminOrders from "./pages/Admin/Orders";
 import AdminProducts from "./pages/Admin/Products";
 
 import { useAuth } from "./context/AuthContext";
+import ProductDetails from "./pages/Detail";
 
 // ---------- Protected route ----------
 function RequireAuth({
@@ -80,6 +83,7 @@ function AppRoutes() {
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/detail" element={<ProductDetails />} />
         {/* user */}
         <Route
           path="/shop"
@@ -102,6 +106,7 @@ function AppRoutes() {
           <Route index element={<AdminDashboard />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="products" element={<AdminProducts />} />
+          
         </Route>
       </Routes>
 
